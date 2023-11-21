@@ -3,7 +3,7 @@ import json
 
 
 # pulls data from soilscout api
-
+# for now, local files will serve as a database, so as to model the the behaviour once we have a database
 
 # NOTE:
 # - Access tokens are valid for 15 minutes.
@@ -47,6 +47,24 @@ def get_refresh_token(refresh_token : str) -> dict:
         return {"error": "RequestException"}
     return response.json()
 
+def verify_access_token(access_token : str) -> dict:
+    '''
+    Verifies the access token and returns the user id
+    '''
+    url = "https://dev.soilscouts.fi/api/v1"
+    payload = {
+        "token": access_token
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    try: 
+        response = requests.post(url + "/auth/token/verify/",data=json.dumps(payload), headers=headers)
+    except requests.exceptions.RequestException as e:
+        print(e)
+        return {"error": "RequestException"}
+    return response.json()
+
 
 
 def get_devices(access_token : str) -> dict:
@@ -64,5 +82,5 @@ def get_devices(access_token : str) -> dict:
         return {"error": "RequestException"}
     return response.json()
 
-with open("out.log", "w") as f:
-    json.dump(get_devices("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk4Njk1NjMwLCJpYXQiOjE2OTg2OTM2MzAsImp0aSI6ImRhMDRhYmRmOWJiMTRmNmRiYmNlNmFhMGU5YTljMjkyIiwidXNlcl9pZCI6MTAxNCwiaXNfYWRtaW4iOmZhbHNlfQ.aKnLSoPYNSuiFx_bTWFkWw6BGYZvrOWqovZe5oagk3s"),f, indent=4)
+
+
