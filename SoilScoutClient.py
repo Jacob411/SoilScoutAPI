@@ -4,7 +4,7 @@ from api_utils import *
 
 
 class SoilScoutClient:
-
+    #Smcelroy Turfweeds11!
     def __init__(self, username : str, password : str):
         self.username = username
         self.password = password
